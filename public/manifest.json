@@ -1,0 +1,39 @@
+{
+  "manifest_version": 2,
+  "name": "Qiaper",
+  "description": "集接口抓取/生成、请求Mock为一体的生产力Chrome拓展",
+  "version": "1.0",
+  "permissions": [
+    "background",
+    "tabs",
+    "storage"
+  ],
+  "icons": {
+    "256": "logo.png"
+  },
+  "browser_action": {
+    "default_popup": "index.html"
+  },
+  "background": {
+    "scripts": [
+      "backgroundScripts/index.js"
+    ],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "./contentScripts/index.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    "contentScripts/intercept.js",
+    "contentScripts/ajax-hook.min.js"
+  ],
+  "content_security_policy": "script-src 'self' 'sha256-hrABjXgkmzJSAYJz7Tb8+vCZlVwt6UMWGfHKxDlE+2k='; object-src 'self'"
+}
