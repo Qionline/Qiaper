@@ -9,10 +9,10 @@ const QIAPER_BLOCK_DATA = {
 
 function handleMockData(url, { method }) {
   return new Promise((resolve, reject) => {
-    // 稍后再替换这段代码
+
     function sendMsg() {
       if (QIAPER_BLOCK_DATA.isInit) {
-        console.log(`拦截请求 ${method} ${url}`)
+        // console.log(`拦截请求 ${method} ${url}`)
         for (let idx = 0; idx < QIAPER_BLOCK_DATA.mock_list.length; idx++) {
           const el = QIAPER_BLOCK_DATA.mock_list[idx];
           if (method.toUpperCase() === el.method && url.split('?')[0] === el.url) {
@@ -28,6 +28,10 @@ function handleMockData(url, { method }) {
       }, 100);
     }
 
+    if (!method) {
+      reject()
+    }
+
     sendMsg()
   })
 }
@@ -36,7 +40,7 @@ function handleMockData(url, { method }) {
 ah.proxy({
   onRequest: (config, handler) =>
     handleMockData(config.url, config)
-      .then(({ response }) => {
+      .then((response) => {
         return handler.resolve({
           config,
           status: 200,

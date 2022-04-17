@@ -55,13 +55,13 @@ const prod_methods = {
     cb(res.tab ? res.tab : "main")
   },
   // 获取是否处于创建页面 (emun: / /createRequest)
-  ChromeGetPageIdx: cb => {
-    const res = chrome.storage.local.get(["page"])
+  ChromeGetPageIdx: async cb => {
+    const res = await chrome.storage.local.get(["page"])
     cb(res.page ? res.page : "/")
   },
   // 获取新增request form data
-  ChromeGetRequestFormData: cb => {
-    const res = chrome.storage.local.get(["reqFormData"])
+  ChromeGetRequestFormData: async cb => {
+    const res = await chrome.storage.local.get(["reqFormData"])
     cb(res.reqFormData ? JSON.parse(res.reqFormData) : {
       method: "GET",
       url: '',
@@ -69,8 +69,8 @@ const prod_methods = {
     })
   },
   // 获取mock request list
-  ChromeGetMockRequestList: cb => {
-    const res = chrome.storage.local.get(["mockRequestList"])
+  ChromeGetMockRequestList: async cb => {
+    const res = await chrome.storage.local.get(["mockRequestList"])
     cb(res.mockRequestList ? JSON.parse(res.mockRequestList) : [])
   },
 }
