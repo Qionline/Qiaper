@@ -4,6 +4,10 @@ const dev_methods = {
   ChromeSetLocalStorge: (key, value, cb) => {
     cb()
   },
+  // 设置mock list
+  ChromeSetMockRequestList: (val, cb) => {
+    cb()
+  },
   // 获取tab index (emun: main setting)
   ChromeGetTabIdx: cb => {
     cb("main")
@@ -31,45 +35,43 @@ const dev_methods = {
 }
 
 const prod_methods = {
-  ChromeSetLocalStorge: (key, value, cb) => {
+  ChromeSetLocalStorge: async (key, value, cb) => {
     const data = {}
     data[key] = value
-    chrome.storage.local.set(data, function () {
-      cb()
-    })
+    await chrome.storage.local.set(data)
+    cb()
   },
-  ChromeSetMockRequestList: (val, cb) => {
-    chrome.storage.local.set({ mockRequestList: val }, function () {
-      cb()
-      // 更新inrtercept数据
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { action: "UPDATE_MOCK_LIST", value: JSON.parse(val) })
-      })
-    })
+  // 设置mock list
+  ChromeSetMockRequestList: async (val, cb) => {
+    await chrome.storage.local.set({ mockRequestList: val })
+    cb()
+    // 更新inrtercept数据
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
+    chrome.tabs.sendMessage(tabs[0].id, { action: "UPDATE_MOCK_LIST", value: JSON.parse(val) })
   },
-  ChromeGetTabIdx: cb => {
-    chrome.storage.local.get(["tab"], function (res) {
-      cb(res.tab ? res.tab : "main")
-    })
+  // 获取tab index (emun: main setting)
+  ChromeGetTabIdx: async cb => {
+    const res = await chrome.storage.local.get(["tab"])
+    cb(res.tab ? res.tab : "main")
   },
+  // 获取是否处于创建页面 (emun: / /createRequest)
   ChromeGetPageIdx: cb => {
-    chrome.storage.local.get(["page"], function (res) {
-      cb(res.page ? res.page : "/")
-    })
+    const res = chrome.storage.local.get(["page"])
+    cb(res.page ? res.page : "/")
   },
+  // 获取新增request form data
   ChromeGetRequestFormData: cb => {
-    chrome.storage.local.get(["reqFormData"], function (res) {
-      cb(res.reqFormData ? JSON.parse(res.reqFormData) : {
-        method: "GET",
-        url: '',
-        resp: '{}'
-      })
+    const res = chrome.storage.local.get(["reqFormData"])
+    cb(res.reqFormData ? JSON.parse(res.reqFormData) : {
+      method: "GET",
+      url: '',
+      resp: '{}'
     })
   },
+  // 获取mock request list
   ChromeGetMockRequestList: cb => {
-    chrome.storage.local.get(["mockRequestList"], function (res) {
-      cb(res.mockRequestList ? JSON.parse(res.mockRequestList) : [])
-    })
+    const res = chrome.storage.local.get(["mockRequestList"])
+    cb(res.mockRequestList ? JSON.parse(res.mockRequestList) : [])
   },
 }
 

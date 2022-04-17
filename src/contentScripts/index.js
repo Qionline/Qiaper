@@ -10,10 +10,12 @@ document.documentElement.appendChild(interceptScript)
 
 // 注入 mock list
 interceptScript.addEventListener('load', () => {
-  chrome.storage.local.get(["mockRequestList"], function (res) {
-    const value = res.mockRequestList ? JSON.parse(res.mockRequestList) : []
-    postMessage({ action: 'UPDATE_MOCK_LIST', value });
-  })
+  chrome.storage.local.get(["mockRequestList"]).then(
+    res => {
+      const value = res.mockRequestList ? JSON.parse(res.mockRequestList) : []
+      postMessage({ action: 'UPDATE_MOCK_LIST', value });
+    }
+  )
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
