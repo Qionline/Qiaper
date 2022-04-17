@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
+    "ajax-hook": "^2.0.3",
     "antd": "^4.19.5",
     "axios": "^0.26.1",
     "buffer": "^6.0.3",
@@ -23,19 +24,23 @@
   },
   "scripts": {
     "start": "cross-env REACT_APP_ENV=dev craco start",
-    "build": "cross-env REACT_APP_ENV=prod craco build && ./script/build.sh",
+    "build": "cross-env REACT_APP_ENV=prod craco build && rollup -c",
     "postinstall": "node ./script/gitmojifix.js"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.17.9",
     "@craco/craco": "^6.4.3",
+    "@rollup/plugin-commonjs": "^21.1.0",
+    "@rollup/plugin-node-resolve": "^13.2.1",
+    "commitlint": "^13.1.0",
+    "commitlint-config-gitmoji": "^2.2.5",
     "craco-less": "^2.0.0",
     "create-react-app": "^5.0.0",
     "cross-env": "^7.0.3",
-    "webpackbar": "^5.0.2",
-    "commitlint": "^13.1.0",
-    "commitlint-config-gitmoji": "^2.2.5",
-    "husky": "4.3.8"
+    "husky": "4.3.8",
+    "rollup": "^2.70.2",
+    "rollup-plugin-uglify": "^6.0.4",
+    "webpackbar": "^5.0.2"
   },
   "eslintConfig": {
     "extends": [
