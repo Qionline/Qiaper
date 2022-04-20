@@ -57,22 +57,21 @@ const CreateRequest = () => {
     ChromeMethods.ChromeGetRequestFormData(initialValues => {
       form.setFieldsValue(initialValues)
     })
-  }, [])
+  }, []) // eslint-disable-line
 
   return (
     <div className="page-container create-request-container">
       <div className="create-request-cls">
         <Form
           form={form}
-          layout="horizontal"
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 16 }}
+          size="small"
           initialValues={{ method: "GET", resp: '{}' }}
           onFinish={onFinish}
         >
           <Form.Item
             label="类型"
             name="method"
+            className="form-item-style"
             rules={[
               {
                 required: true,
@@ -91,6 +90,7 @@ const CreateRequest = () => {
           <Form.Item
             label="URL"
             name="url"
+            className="form-item-style"
             rules={[
               {
                 required: true,
@@ -103,6 +103,7 @@ const CreateRequest = () => {
           <Form.Item
             label="响应体"
             name="resp"
+            className="form-item-style"
             rules={[
               {
                 required: true,
