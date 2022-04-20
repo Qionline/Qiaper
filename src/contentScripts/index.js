@@ -13,7 +13,7 @@ interceptScript.addEventListener('load', () => {
   chrome.storage.local.get(["mockRequestList"]).then(
     res => {
       const value = res.mockRequestList ? JSON.parse(res.mockRequestList) : []
-      postMessage({ action: 'UPDATE_MOCK_LIST', value });
+      postMessage({ action: 'INIT_MOCK_DATA', value });
     }
   )
 });
