@@ -1,4 +1,4 @@
-import { proxy, unProxy } from "ajax-hook";
+import { proxy } from "ajax-hook";
 
 const QIAPER_BLOCK_DATA = {
   global_setting: {
@@ -14,6 +14,10 @@ function handleMockData(url, { method }) {
     function sendMsg() {
       if (QIAPER_BLOCK_DATA.is_init) {
         console.log(`拦截请求 ${method} ${url}`)
+        if (!QIAPER_BLOCK_DATA.global_setting.mock) {
+          reject()
+          return
+        }
         for (let idx = 0; idx < QIAPER_BLOCK_DATA.mock_list.length; idx++) {
           const el = QIAPER_BLOCK_DATA.mock_list[idx];
           if (el.mock && method.toUpperCase() === el.method && url.split('?')[0] === el.url) {
@@ -40,6 +44,7 @@ function handleMockData(url, { method }) {
 
 const QIAPER_BLOCK_REQUEST = {
   baseFetch: window.fetch,
+  baseXHR: window.XMLHttpRequest,
 
   setXhr() {
     proxy({
@@ -95,14 +100,14 @@ window.addEventListener("message", function (event) {
   const { action, ...data } = event.data;
   // 初始化
   if (action === 'INIT_MOCK_DATA') {
-    QIAPER_BLOCK_DATA.mock_list = data.value;
-    QIAPER_BLOCK_DATA.is_init = true;
-
     // 未开启全局mock，则注销xhr、fetch
     if (!data?.global_setting?.mock) {
+      QIAPER_BLOCK_DATA.global_setting = data.global_setting;
       window.fetch = QIAPER_BLOCK_REQUEST.baseFetch
-      unProxy()
+      window.XMLHttpRequest = QIAPER_BLOCK_REQUEST.baseXHR
     }
+    QIAPER_BLOCK_DATA.mock_list = data.value;
+    QIAPER_BLOCK_DATA.is_init = true;
   }
   // 更新 mock 列表
   else if (action === 'UPDATE_MOCK_LIST') {

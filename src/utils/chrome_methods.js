@@ -1,16 +1,5 @@
 /*global chrome*/
-
-// request json temp
-const BASE_REQUEST_FORM = {
-  method: "GET",
-  url: '',
-  resp: '{}',
-  mock: false
-}
-// setting json temp
-const BASE_GLOBAL_SETTING = {
-  mock: true
-}
+import { BASE_REQUEST_FORM, BASE_GLOBAL_SETTING } from './constant';
 
 const dev_methods = {
   ChromeSetLocalStorge: (key, value, cb) => {
@@ -70,7 +59,7 @@ const prod_methods = {
   // 设置global setting item
   ChromeSetGlobalSetting: async (key, val, cb) => {
     const res = await chrome.storage.local.get(["appGlobalSetting"])
-    const setting = res.appSetting ? JSON.parse(res.appSetting) : BASE_GLOBAL_SETTING
+    const setting = res.appGlobalSetting ? JSON.parse(res.appGlobalSetting) : BASE_GLOBAL_SETTING
     setting[key] = val
     await chrome.storage.local.set({ appGlobalSetting: JSON.stringify(setting) })
     cb()
@@ -99,7 +88,7 @@ const prod_methods = {
   // 获取配置
   ChromeGetAppGlobalSetting: async cb => {
     const res = await chrome.storage.local.get(["appGlobalSetting"])
-    cb(res.appSetting ? JSON.parse(res.appSetting) : BASE_GLOBAL_SETTING)
+    cb(res.appGlobalSetting ? JSON.parse(res.appGlobalSetting) : BASE_GLOBAL_SETTING)
   },
 }
 

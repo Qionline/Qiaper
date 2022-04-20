@@ -25,6 +25,7 @@
   "scripts": {
     "start": "cross-env REACT_APP_ENV=dev craco start",
     "build": "cross-env REACT_APP_ENV=prod craco build && rollup -c",
+    "build:content": "rollup -c",
     "postinstall": "node ./script/gitmojifix.js"
   },
   "devDependencies": {
