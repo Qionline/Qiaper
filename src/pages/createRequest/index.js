@@ -3,17 +3,14 @@ import { useNavigate } from "react-router-dom"
 import { observer } from "mobx-react-lite"
 import { Button, Form, Select, Input } from 'antd';
 
+import { stores, useStateStore } from "@/stores"
+import { BASE_REQUEST_FORM } from '@/utils/constant';
 import ChromeMethods from '@/utils/chrome_methods';
 import "./index.less"
 
-const INIT_FORM_DATA = {
-  method: "GET",
-  url: '',
-  resp: '{}'
-}
-
 const CreateRequest = () => {
   const navigate = useNavigate()
+  const { editIdx } = useStateStore()
 
   const [form] = Form.useForm();
 
@@ -22,16 +19,22 @@ const CreateRequest = () => {
     ChromeMethods.ChromeGetRequestFormData(initialValues => {
       const formData = { ...initialValues }
       formData[key] = val
-      ChromeMethods.ChromeSetLocalStorge('reqFormData', JSON.stringify(formData), () => {
-      })
+      ChromeMethods.ChromeSetLocalStorge('reqFormData', JSON.stringify(formData), () => { })
     })
 
   }
 
-  // 创建请求
+  // 创建/编辑 请求
   const onFinish = (values) => {
     ChromeMethods.ChromeGetMockRequestList((list) => {
-      ChromeMethods.ChromeSetMockRequestList(JSON.stringify([...list, values]), () => {
+      const editList = [...list]
+
+      if (editIdx === -1)
+        editList.push(values)
+      else
+        editList[editIdx] = { ...list[editIdx], ...values }
+
+      ChromeMethods.ChromeSetMockRequestList(JSON.stringify(editList), () => {
         ChromeMethods.ChromeSetLocalStorge('page', '/', () => {
           navigate('/')
         })
@@ -40,15 +43,16 @@ const CreateRequest = () => {
   };
   // 重置表单
   const resetForm = () => {
-    ChromeMethods.ChromeSetLocalStorge('reqFormData', JSON.stringify(INIT_FORM_DATA), () => {
+    ChromeMethods.ChromeSetLocalStorge('reqFormData', JSON.stringify(BASE_REQUEST_FORM), () => {
       form.resetFields()
     })
   }
   // 返回主页
   const toBackHome = () => {
-    ChromeMethods.ChromeSetLocalStorge('reqFormData', JSON.stringify(INIT_FORM_DATA), () => {
+    ChromeMethods.ChromeSetLocalStorge('reqFormData', JSON.stringify(BASE_REQUEST_FORM), () => {
       ChromeMethods.ChromeSetLocalStorge('page', '/', () => {
         navigate('/')
+        stores.stateStore.handleResetEditIdx()
       })
     })
   }
@@ -116,7 +120,7 @@ const CreateRequest = () => {
         </Form>
 
         <footer className="footer">
-          <Button size="small" style={{ flex: 1 }} type="primary" onClick={form.submit}>创建请求</Button>
+          <Button size="small" style={{ flex: 1 }} type="primary" onClick={form.submit}>{editIdx === -1 ? "创建" : "编辑"}请求</Button>
           <Button size="small" onClick={resetForm}>清空表单</Button>
           <Button size="small" onClick={toBackHome}>返回主页</Button>
         </footer>

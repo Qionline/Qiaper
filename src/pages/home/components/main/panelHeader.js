@@ -1,21 +1,33 @@
 import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { observer } from "mobx-react-lite"
 import { Button, Switch } from 'antd';
 import { CloseOutlined, EditOutlined } from '@ant-design/icons';
 
+import { stores } from "@/stores"
 import ChromeMethods from '@/utils/chrome_methods';
 
 const PanelHeader = ({ requestItem, idx, refreshList }) => {
+  const navigate = useNavigate()
+
   const [switchLoading, setSwitchLoading] = useState(false)
   const [mockState, setmMockState] = useState(!!requestItem.mock)
 
-  // 删除mock item
+  // 删除 mock item
   const toDeleteRequestItem = () => {
     ChromeMethods.ChromeGetMockRequestList(list => {
       list.splice(idx, 1)
       ChromeMethods.ChromeSetMockRequestList(JSON.stringify(list), () => {
         refreshList()
       })
+    })
+  }
+  // 编辑 mock item
+  const toEditRequestItem = () => {
+    ChromeMethods.ChromeSetLocalStorge('reqFormData', JSON.stringify(requestItem), () => {
+      navigate('/createRequest')
+      console.log(idx);
+      stores.stateStore.handleSetEditIdx(idx)
     })
   }
 
@@ -39,7 +51,7 @@ const PanelHeader = ({ requestItem, idx, refreshList }) => {
       </div>
       <div className="panel-header-right" onClick={e => e.stopPropagation()}>
         <Switch style={{ marginRight: "3px" }} size="small" loading={switchLoading} checked={mockState} onClick={switchMockState} />
-        <Button style={{ marginRight: "3px" }} icon={<EditOutlined />} size="small" />
+        <Button style={{ marginRight: "3px" }} icon={<EditOutlined />} size="small" onClick={toEditRequestItem} />
         <Button icon={<CloseOutlined />} size="small" onClick={toDeleteRequestItem} />
       </div>
     </div>

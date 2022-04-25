@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { observer } from "mobx-react-lite"
 import { Collapse, Button } from 'antd';
 
+import { BASE_REQUEST_FORM } from '@/utils/constant';
 import ChromeMethods from '@/utils/chrome_methods';
 import PanelHeader from './panelHeader';
 import PanelBody from './panelBody';
@@ -14,8 +15,10 @@ const Main = () => {
   const [requestList, setRequestList] = useState([])
 
   const toCreateRequestForm = () => {
-    ChromeMethods.ChromeSetLocalStorge('page', '/createRequest', () => {
-      navigate('/createRequest')
+    ChromeMethods.ChromeSetLocalStorge('reqFormData', JSON.stringify(BASE_REQUEST_FORM), () => {
+      ChromeMethods.ChromeSetLocalStorge('page', '/createRequest', () => {
+        navigate('/createRequest')
+      })
     })
   }
 
