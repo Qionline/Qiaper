@@ -117,6 +117,13 @@ const CreateRequest = () => {
           >
             <Input.TextArea placeholder="请输入响应体" onChange={(e) => handleSaveFormData("resp", e.target.value)} />
           </Form.Item>
+          <Form.Item
+            label="注释"
+            name="comment"
+            className="form-item-style"
+          >
+            <Input placeholder="请输入注释" onChange={(e) => handleSaveFormData("comment", e.target.value)} />
+          </Form.Item>
         </Form>
 
         <footer className="footer">

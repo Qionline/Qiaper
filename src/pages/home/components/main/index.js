@@ -22,6 +22,15 @@ const Main = () => {
     })
   }
 
+  const toCatchRequest = () => {
+    const catchReq = {}
+    ChromeMethods.ChromeSetLocalStorge('reqFormData', JSON.stringify(catchReq), () => {
+      ChromeMethods.ChromeSetLocalStorge('page', '/createRequest', () => {
+        navigate('/createRequest')
+      })
+    })
+  }
+
   // 刷新列表
   const refreshList = () => {
     ChromeMethods.ChromeGetMockRequestList(list => {
@@ -48,7 +57,7 @@ const Main = () => {
       </div>
       <footer className="footer">
         <Button size="small" style={{ flex: 1 }} type="primary" onClick={toCreateRequestForm}>创建请求</Button>
-        <Button size="small">抓取请求</Button>
+        <Button size="small" onClick={toCatchRequest}>抓取请求</Button>
       </footer>
     </div>
   )
