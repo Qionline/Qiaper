@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { observer } from "mobx-react-lite"
-import { Collapse, Button } from 'antd';
+import { Collapse, Button, message } from 'antd';
 
 import { BASE_REQUEST_FORM } from '@/utils/constant';
 import ChromeMethods from '@/utils/chrome_methods';
@@ -23,10 +23,17 @@ const Main = () => {
   }
 
   const toCatchRequest = () => {
-    const catchReq = {}
-    ChromeMethods.ChromeSetLocalStorge('reqFormData', JSON.stringify(catchReq), () => {
-      ChromeMethods.ChromeSetLocalStorge('page', '/createRequest', () => {
-        navigate('/createRequest')
+    // 抓取请求
+    ChromeMethods.ChromeGetResponseDoc((res) => {
+      if (!res) {
+        message.error("数据抓取失败")
+        return
+      }
+      let catchReq = { ...res }
+      ChromeMethods.ChromeSetLocalStorge('reqFormData', JSON.stringify(catchReq), () => {
+        ChromeMethods.ChromeSetLocalStorge('page', '/createRequest', () => {
+          navigate('/createRequest')
+        })
       })
     })
   }

@@ -21,5 +21,23 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === "UPDATE_MOCK_LIST") {
     postMessage({ action: 'UPDATE_MOCK_LIST', value: request.value });
   }
+  else if (request.action === "GET_RESPONSE_DOC") {
+    try {
+      // 获取接口文档内容
+      sendResponse({
+        method: 'GET',
+        url: '',
+        resp: '{}',
+        comment: ''
+      })
+    } catch (error) {
+      sendResponse({
+        method: 'GET',
+        url: '',
+        resp: '{}',
+        comment: ''
+      })
+    }
+  }
 })
 

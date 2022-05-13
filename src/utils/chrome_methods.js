@@ -38,7 +38,17 @@ const dev_methods = {
   // 获取配置
   ChromeGetAppGlobalSetting: cb => {
     cb(BASE_GLOBAL_SETTING)
-  }
+  },
+
+  // 获取接口文档信息
+  ChromeGetResponseDoc: cb => {
+    cb({
+      method: 'GET',
+      url: '/test',
+      resp: '{}',
+      comment: 'test'
+    })
+  },
 }
 
 const prod_methods = {
@@ -89,6 +99,13 @@ const prod_methods = {
   ChromeGetAppGlobalSetting: async cb => {
     const res = await chrome.storage.local.get(["appGlobalSetting"])
     cb(res.appGlobalSetting ? JSON.parse(res.appGlobalSetting) : BASE_GLOBAL_SETTING)
+  },
+
+  // 获取接口文档信息
+  ChromeGetResponseDoc: async cb => {
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
+    const response = await chrome.tabs.sendMessage(tabs[0].id, { action: "GET_RESPONSE_DOC" })
+    cb(response)
   },
 }
 

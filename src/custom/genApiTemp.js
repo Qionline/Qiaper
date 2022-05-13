@@ -32,8 +32,10 @@ const postTemplate = function (path, comment) {
  * @param mockItem
  * @returns {String}
 */
-export default function (mockItem) {
-    const { url, method, resp, comment } = mockItem
-    const [domain, path] = splitUrlDomain(url)
+function genApiTemp(mockItem) {
+    const { url, method, comment } = mockItem
+    const { path } = splitUrlDomain(url)
     return method === "GET" ? getTemplate(path, comment) : postTemplate(path, comment)
 }
+
+export default genApiTemp
